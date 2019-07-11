@@ -9,7 +9,7 @@ RESET=`tput sgr0`
 YELLOW=`tput setaf 3`
 
 # Name
-NAME = docker.io/testthedocs/ci-base
+NAME = testthedocs/ci-base
 # Get version form VERSION
 VERSION := $(shell cat VERSION)
 
@@ -21,20 +21,20 @@ help: ## This help message
 
 .PHONY: build
 build: ## Builds docker image
-	@podman build --no-cache=true -t $(NAME):$(VERSION) --rm -f Dockerfile .
+	@docker build --no-cache=true -t $(NAME):$(VERSION) --rm -f Dockerfile .
 
 .PHONY: push
 push: ## Pushes images
-	podman push $(NAME):$(VERSION)
-	podman push $(NAME):latest
+	docker push $(NAME):$(VERSION)
+	docker push $(NAME):latest
 
 .PHONY: tag_latest
 tag_latest: ## Tag image with version and latest tag
-	podman tag $(NAME):$(VERSION) $(NAME):latest
+	docker tag $(NAME):$(VERSION) $(NAME):latest
 
 .PHONY: last_built_date
 last_built_date: ## Show last build date
-	podman inspect -f '{{ .Created }}' $(NAME):$(VERSION)
+	docker inspect -f '{{ .Created }}' $(NAME):$(VERSION)
 
 .PHONY: release
 release: check_release_version build tag_latest push  ## Combine steps to make release
